@@ -30,7 +30,7 @@ class Wraper {
   }
 
   appendChild(child) {
-    this.children.push(child);
+    this.root.appendChild(child);
   }
 
   mountTo(parent) {
@@ -48,19 +48,21 @@ class Div {
   }
 
   setAttribute(name, value) {
-    console.log(name, value);
+    this.root.setAttribute(name, value);
   }
 
   appendChild(child) {
+    // child.mountTo(this.root);
     this.children.push(child);
   }
 
   mountTo(parent) {
     parent.appendChild(this.root);
+    for (let child of this.children) {
+      child.mountTo(this.root);
+    }
   }
 }
-
-class Child {}
 
 let component = (
   <Div id="a" class="b">
@@ -70,4 +72,5 @@ let component = (
   </Div>
 );
 
-console.log(component);
+component.mountTo(document.body);
+// console.log(component);
