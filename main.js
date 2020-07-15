@@ -1,9 +1,12 @@
 function create(Cls, attributes, ...children) {
+  let o;
   if (typeof Cls === "string") {
+    o = new Wrapper(Cls);
+  } else {
+    o = new Cls({
+      timer: {},
+    });
   }
-  let o = new Cls({
-    timer: {},
-  });
 
   for (let name in attributes) {
     o.setAttribute(name, attributes[name]);
@@ -11,40 +14,26 @@ function create(Cls, attributes, ...children) {
 
   for (let child of children) {
     // o.children.push(child);
+    if (typeof child === "string") child = new Text(child);
     o.appendChild(child);
   }
   return o;
 }
 
-class Wraper {
-  constructor(config) {
+class Text {
+  constructor(text) {
     this.children = [];
-    this.root = document.createElement("div");
+    this.root = document.createTextNode(text);
   }
-  set class(v) {
-    console.log("Parent::class");
-  }
-
-  setAttribute(name, value) {
-    console.log(name, value);
-  }
-
-  appendChild(child) {
-    this.root.appendChild(child);
-  }
-
   mountTo(parent) {
     parent.appendChild(this.root);
   }
 }
 
-class Div {
-  constructor(config) {
+class Wrapper {
+  constructor(type) {
     this.children = [];
-    this.root = document.createElement("div");
-  }
-  set class(v) {
-    console.log("iv::class");
+    this.root = document.createElement(type);
   }
 
   setAttribute(name, value) {
@@ -52,7 +41,6 @@ class Div {
   }
 
   appendChild(child) {
-    // child.mountTo(this.root);
     this.children.push(child);
   }
 
@@ -64,12 +52,57 @@ class Div {
   }
 }
 
+class MyComponent {
+  constructor(config) {
+    this.children = [];
+    // this.root = document.createElement("div");
+  }
+
+  setAttribute(name, value) {
+    this.root.setAttribute(name, value);
+  }
+
+  appendChild(child) {
+    // child.mountTo(this.root);
+    this.children.push(child);
+  }
+
+  render() {
+    return (
+      <article>
+        <header>i'm a header</header>
+        {this.slot}
+        <footer>i'm a footer</footer>
+      </article>
+    );
+  }
+
+  mountTo(parent) {
+    this.slot = <div></div>;
+    for (let child of this.children) {
+      this.slot.appendChild(child);
+    }
+    this.render().mountTo(parent);
+  }
+}
+
+// let component = (
+//   <Div id="a" class="b" style="width:100px;height:100px;background:red">
+//     <div>
+//       <span></span>
+//     </div>
+//     <p></p>
+//     <Div>
+//       <p></p>
+//     </Div>
+//     <Div></Div>
+//   </Div>
+// );
+
 let component = (
-  <Div id="a" class="b">
-    <Div></Div>
-    <Div></Div>
-    <Div></Div>
-  </Div>
+  <MyComponent>
+    <div>text</div>
+  </MyComponent>
 );
 
 component.mountTo(document.body);
