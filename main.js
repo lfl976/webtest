@@ -1,3 +1,4 @@
+import { Carousel } from "./carousel.view";
 function create(Cls, attributes, ...children) {
   let o;
   if (typeof Cls === "string") {

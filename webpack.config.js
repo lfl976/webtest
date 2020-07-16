@@ -15,6 +15,10 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.view$/,
+        loader: require.resolve("./myloader.js"),
+      },
     ],
   },
   mode: "development",
