@@ -84,9 +84,9 @@ class Carousel {
         position = nextPosition;
       }, 16);
 
-      timer = setTimeout(nextPic, 3000);
+      setTimeout(nextPic, 3000);
     };
-
+    setTimeout(nextPic, 3000);
     return root;
   }
 
