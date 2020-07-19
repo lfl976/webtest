@@ -1,5 +1,5 @@
 import { create, Wrapper, Text } from "./create";
-// import { Carousel } from "./carousel.view";
+import { Carousel } from "./carousel.view";
 
 /*class MyComponent {
   constructor(config) {
@@ -34,7 +34,7 @@ import { create, Wrapper, Text } from "./create";
     this.render().mountTo(parent);
   }
 }*/
-
+/*
 class Carousel {
   constructor(config) {
     this.children = [];
@@ -93,7 +93,7 @@ class Carousel {
   mountTo(parent) {
     this.render().mountTo(parent);
   }
-}
+}*/
 
 // let component = (
 //   <Div id="a" class="b" style="width:100px;height:100px;background:red">
