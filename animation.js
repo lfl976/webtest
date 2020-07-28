@@ -22,7 +22,7 @@ export class Timeline {
       object[property] = template(value);
     }
 
-    if(animations.length)
+    if(true || animations.length)
       this.requestID = requestAnimationFrame(() => this.tick());
   }
 

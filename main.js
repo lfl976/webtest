@@ -66,12 +66,14 @@ class Carousel {
     let root = <div class="carousel">{children}</div>;
 
     let position = 0;
+    let tl = new Timeline;
+    tl.start();
 
     let nextPic = () => {
       let nextPosition = (position + 1) % this.data.length;
       let current = children[position];
       let next = children[nextPosition];
-      let tl = new Timeline;
+      
       // current.style.transition = "ease 0s";
       // next.style.transition = "ease 0s";
 
@@ -88,10 +90,10 @@ class Carousel {
       //   position = nextPosition;
       // }, 16);
 
-      tl.add(new Animation(current.style, "transform", `${-500 * position}`, `${-500 -500 * position}`, 500, 0, linear, v => `translateX(${v}px)`))
-      tl.add(new Animation(next.style, "transform", `${500 - 500 * nextPosition}`, `${ -500 * nextPosition}`, 500, 0, linear, v => `translateX(${v}px)`))
+      tl.add(new Animation(current.style, "transform", -100 * position, -100 -100 * position, 500, 0, linear, v => `translateX(${v}%)`))
+      tl.add(new Animation(next.style, "transform", 100 - 100 * nextPosition,  -100 * nextPosition, 500, 0, linear, v => `translateX(${v}%)`))
       position = nextPosition;
-      tl.start();
+      
 
       setTimeout(nextPic, 3000);
     };
