@@ -70,6 +70,9 @@ export class Carousel {
         // console.log(currentTransformValue)
       }
       let onPanend = event => {
+        let lastElement = children[lastPosition];
+        let currentElement = children[currentPosition];
+        let nextElement = children[nextPosition];
         let direction = 0;
         let dx = event.clientX - event.startX;
 
@@ -85,8 +88,8 @@ export class Carousel {
 
         
           let lastAnimation = new Animation(lastElement.style, "transform", -500 -500 * lastPosition + offset + dx,-500 -500 * lastPosition + direction * 500, 500, 0, ease, v => `translateX(${v}px)`)
-          let currentAnimation = new Animation(currentElement.style, "transform", -500 * currentPosition + offset + dx, -500 -500 * currentPosition + direction * 500, 500, 0, ease, v => `translateX(${ v}px)`)
-          let nextAnimation = new Animation(nextElement.style, "transform", 500 -500 * nextPosition + offset + dx, -500 -500 * nextPosition + direction * 500, 500, 0, ease, v => `translateX(${ v}px)`)
+          let currentAnimation = new Animation(currentElement.style, "transform", -500 * currentPosition + offset + dx, -500 * currentPosition + direction * 500, 500, 0, ease, v => `translateX(${ v}px)`)
+          let nextAnimation = new Animation(nextElement.style, "transform", 500 -500 * nextPosition + offset + dx, 500 -500 * nextPosition + direction * 500, 500, 0, ease, v => `translateX(${ v}px)`)
         timeline.add(lastAnimation)
         timeline.add(currentAnimation)
         timeline.add(nextAnimation)
