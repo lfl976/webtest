@@ -1,29 +1,40 @@
 export class Timeline {
   constructor() {
-    this.animations = [];
+    this.animations = new Set();
+    this.finishedAnimations = new Set();
+    this.addTimes = new Map();
     this.requestID = null
     this.state = 'init';
   }
   tick() {
     let t = Date.now() - this.startTime;
-    console.log(t)
-    let animations = this.animations.filter(animation => !animation.finished)
-    for (let animation of animations) {
+    // console.log(t)
+    // let animations = this.animations.filter(animation => !animation.finished)
+    for (let animation of this.animations) {
       
-      let {object,property,template,duration,start,end,timingFunction,delay, addTime} = animation;
+      let {object,property,template,duration,start,end,timingFunction,delay} = animation;
 
+      let addTime = this.addTimes.get(animation);
+
+      if(t < delay + addTime)
+        continue;
+      
       let progression = timingFunction((t-delay - addTime) / duration); // 0- 1 之间
       if (t > duration + delay + addTime) {
         progression = 1
-        animation.finished = true
+        this.animations.delete(animation);
+        this.finishedAnimations.add(animation);
+        // animation.finished = true
       }
       let value = animation.valueFromProgression(progression);
 
       object[property] = template(value);
     }
 
-    if(true || animations.length)
-      this.requestID = requestAnimationFrame(() => this.tick());
+    if(this.animations.size)
+      this.requestID = requestAnimationFrame(() => this.tick());// 箭头函数和父作用域一样的this
+    else
+      this.requestID = null;
   }
 
   pause() {
@@ -31,7 +42,10 @@ export class Timeline {
       return;
     this.state = 'pause';
     this.pauseTime = Date.now()
-    cancelAnimationFrame(this.requestID)
+    if(this.requestID !== null) {
+      cancelAnimationFrame(this.requestID)
+      this.requestID = null;
+    }
   }
 
   resume() {
@@ -50,24 +64,44 @@ export class Timeline {
     this.tick();
   }
 
-  restart() {
+  reset() {
     if(this.state == 'playing')
       this.pause()
-    this.animations = [];
+    this.animations = new Set();
+    this.finishedAnimations=new Set();
+    this.addTimes = new Map();
     this.requestID = null
     this.state = 'playing';
     this.startTime = Date.now();
     this.pauseTime = null
-    this.tick()
+    this.state = "init"
+  }
+
+  restart() {
+    if(this.state == 'playing')
+      this.pause()
+
+    for( let animation of this.finishedAnimations)
+      this.animations.add(animation);
+
+    this.finishedAnimations = new Set()
+    this.animations
+    this.requestID = null
+    this.state = 'playing';
+    this.startTime = Date.now();
+    this.pauseTime = null
+    
   }
 
   add(animation, addTime) {
-    this.animations.push(animation);
-    animation.finished = false;
+    this.animations.add(animation);
+    // animation.finished = false;
+    if(this.state === 'playing' && this.requestID === null)
+      this.tick()
     if(this.state === 'playing')
-      animation.addTime = addTime !== void 0 ? addTime : Date.now() - this.startTime
+      this.addTimes.set(animation, addTime !== void 0 ? addTime : Date.now() - this.startTime)
     else
-      animation.addTime = addTime !== void 0 ? addTime : 0
+      this.addTimes.set(animation, addTime !== void 0 ? addTime : 0)
   }
 }
 
