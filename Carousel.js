@@ -4,6 +4,9 @@ import { cubicBezier } from "./cubicBezier.js";
 let linear = t => t;
 let ease = cubicBezier(.25,.1,.25,1);
 
+import css from './carousel.css'
+
+
 import { enableGesture } from './gesture';
 export class Carousel {
   constructor(config) {
@@ -75,10 +78,10 @@ export class Carousel {
         let nextElement = children[nextPosition];
         let direction = 0;
         let dx = event.clientX - event.startX;
-
-        if(dx + offset > 250) {
+console.log(event.isFlick)
+        if(dx + offset > 250 || dx > 0 && event.isFlick) {
           direction = 1;
-        } else if(dx + offset < -250){
+        } else if(dx + offset < -250|| dx < 0 && event.isFlick){
           direction = -1;
         }
         timeline.reset();

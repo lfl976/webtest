@@ -19,6 +19,10 @@ module.exports = {
         test: /\.view$/,
         loader: require.resolve("./myloader.js"),
       },
+      {
+        test: /\.css$/,
+        loader: require.resolve("./cssloader.js"),
+      },
     ],
   },
   mode: "development",

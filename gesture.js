@@ -131,7 +131,7 @@ export function enableGesture(element) {
       // console.log(speed);
       let isFlick = speed > 2.5;
       if (isFlick) {
-        let e = new CustomEvent("panend");
+        let e = new CustomEvent("flick");
         Object.assign(e, {
           startX: context.startX,
           startY: context.startY,
